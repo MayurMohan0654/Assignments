@@ -19,8 +19,9 @@ func CreateOrders(c *gin.Context) {
 	}
 
 	configs.DB.Create(&user)
-
 	c.JSON(http.StatusOK, user)
+	
+
 }
 
 func GetOrders(c *gin.Context) {
@@ -32,3 +33,5 @@ func GetOrders(c *gin.Context) {
 
 	c.JSON(http.StatusOK, users)
 }
+
+

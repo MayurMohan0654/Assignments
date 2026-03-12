@@ -33,7 +33,25 @@ func GetFacilities(c *gin.Context) {
 
 	var facilities []models.Facilities
 
-	configs.DB.Find(&facilities)
+	// configs.DB.Find(&facilities)
+	// or
+	configs.DB.Raw("Select * from facilities").Scan(&facilities)
 
 	c.JSON(http.StatusOK, facilities)
+}
+
+func GetFacilitiesById(c *gin.Context) {
+	var facilities models.Facilities
+
+	code := c.Param("facility_code")
+
+	result := configs.DB.Raw("SELECT * from facilities WHERE code = ?", code)
+
+	if result.Error != nil {
+		println("somthing went wrong")
+		c.JSON(http.StatusNotFound, `{"msg": "notfound or somthing went wrong"}`)
+	}
+	result.Scan(&facilities)
+	c.JSON(http.StatusOK, facilities)
+
 }
