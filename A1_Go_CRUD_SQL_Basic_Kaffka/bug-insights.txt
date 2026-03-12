@@ -1,0 +1,7 @@
+needed:
+stop creating such orders which have no facilities existenct
+
+
+done/ solved:
+duplicate order create handeling
+duplicate facility code creation stopage
