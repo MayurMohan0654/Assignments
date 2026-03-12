@@ -1,9 +1,18 @@
-first assignment.
+# First Assignment
 
-task 1: write Sql queries for facilities and order tables
-task 2: Golang API
-    - Facilities API
-    - Order API
+## Task 1
+Write SQL queries for the following tables:
+- **Facilities**
+- **Orders**
 
+---
 
-task 3: Kafka (Basic)
+## Task 2
+Create the following APIs:
+- **Facilities API**
+- **Order API**
+
+---
+
+## Task 3
+Learn and implement **Kafka (Basic)**.

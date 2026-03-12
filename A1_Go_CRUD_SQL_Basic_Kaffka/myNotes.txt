@@ -58,3 +58,92 @@ First get the GORM via:
 
 Then create Database connection (i created it into configs folder with database.go and Exports the Database connection with DB variable)
 this DB variable it the ultimate database which we will use to run query and fetch results from.
+
+
+# how json comming from client tours out server.
+
+HTTP request reaches Gin router
+Client sends:
+POST /facility
+Content-Type: application/json
+
+Body:
+{
+  "code": "VND-1113",
+  "name": "Buffet Fuffet",
+  "address": "Gurgaon"
+}
+
+Gin internally creates a context object:
+*gin.Context
+This object contains:
+    request
+    response writer
+    params
+    headers
+    body
+    middleware data
+
+Important part:
+    c.Request.Body
+
+This holds the raw HTTP body stream.
+
+
+Then
+c.ShouldBindJSON(&req)
+selects the binder engin (Gin's JSON binder eg)
+Gin's JSON binder basically does:
+    json.NewDecoder(c.Request.Body).Decode(&req)
+
+
+Reflection maps JSON → struct fields
+Go now examines your struct using reflection.
+Example struct:
+type CreateFacilityRequest struct {
+	Code    string `json:"code"`
+	Name    string `json:"name"`
+	Address string `json:"address"`
+}
+
+Reflection inspects:
+    Field name
+    Field type
+    json tag
+
+Mapping happens like this:
+    JSON key	Struct field
+    code	    Code
+    name	    Name
+    address	    Address
+
+
+Then values are written directly into the struct memory.
+struct becomes populated
+
+Before decoding:
+req = {
+  Code: "",
+  Name: "",
+  Address: ""
+}
+
+After decoding:
+req = {
+  Code: "VND-1113",
+  Name: "Buffet Fuffet",
+  Address: "Gurgaon"
+}
+
+Validation runs (if tags exist)
+If your struct had:
+    Code string `json:"code" binding:"required"`
+
+configs.DB.Create(&req)
+because req now contains real data.
+
+Why pointer &req is required
+Gin must write values into your variable.
+Without pointer:
+Gin would receive a copy, not the real variable.
+Pointer allows modification:
