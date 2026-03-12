@@ -1,0 +1,60 @@
+Facilities means things that can be used, booked, or ordered
+Orders are the record for that booking.
+
+Facilities: like (Gym, Swimming pool, Spa, Laundry, Buffet etc..) over differnt different places.
+users will order/ books the facilities of thier choice.
+
+
+
+create database a1;
+use a1;
+
+
+Facilities table:
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| code    | varchar(30) | NO   | PRI | NULL    |       |
+| name    | varchar(30) | YES  |     | NULL    |       |
+| address | varchar(30) | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+via
+create table facilities(
+    code varchar(30) primary key, 
+    name varchar(30), 
+    address varchar(30)
+);
+
+
+
+Order table:
++---------------+-------------+------+-----+-------------------+-------------------+
+| Field         | Type        | Null | Key | Default           | Extra             |
++---------------+-------------+------+-----+-------------------+-------------------+
+| id            | varchar(30) | NO   | PRI | NULL              |                   |
+| facility_code | varchar(30) | YES  | MUL | NULL              |                   |
+| status        | varchar(30) | YES  |     | NULL              |                   |
+| created_at    | datetime    | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
++---------------+-------------+------+-----+-------------------+-------------------+
+4 rows in set (0.00 sec)
+via
+create table orders (
+    id varchar(30) primary key, 
+    facility_code varchar(30), 
+    status varchar(30), 
+    created_at DATETIME default CURRENT_timestamp, 
+    foreign key (facility_code) references facilities(code)
+);
+
+
+
+
+To Use GORM with server,
+First get the GORM via:
+    go get -u gorm.io/gorm
+    go get -u gorm.io/driver/mysql
+
+
+Then create Database connection (i created it into configs folder with database.go and Exports the Database connection with DB variable)
+this DB variable it the ultimate database which we will use to run query and fetch results from.
