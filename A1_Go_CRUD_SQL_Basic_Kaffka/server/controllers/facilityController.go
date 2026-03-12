@@ -28,7 +28,7 @@ func CreateFacilities(c *gin.Context) {
 	}
 
 	if existsFacility(facilities.Code) {
-		c.JSON(http.StatusConflict, gin.H{"msg": facilities.Code + " already exists"})
+		c.JSON(http.StatusConflict, gin.H{"err": "409 conflict", "msg": facilities.Code + " already exists"})
 		return
 	}
 
@@ -45,21 +45,19 @@ func GetFacilities(c *gin.Context) {
 	c.JSON(http.StatusOK, facilities)
 }
 
-func GetFacilitiesById(c *gin.Context) {
+func GetFacilityById(c *gin.Context) {
 	var facilities models.Facilities
 
 	code := c.Param("facility_code")
 
 	result := configs.DB.Raw("SELECT * from facilities WHERE code = ?", code)
+	result.Scan(&facilities)
+
 	if result.RowsAffected == 0 {
-		c.JSON(http.StatusNotFound, gin.H{"msg": "no record found"})
+		c.JSON(http.StatusNotFound, gin.H{"err": "404 Not Found", "msg": "No facility with code " + code + " found."})
+		return
 	}
 
-	if result.Error != nil {
-		println("somthing went wrong")
-		c.JSON(http.StatusNotFound, `{"msg": "notfound or somthing went wrong"}`)
-	}
-	result.Scan(&facilities)
 	c.JSON(http.StatusOK, facilities)
 
 }

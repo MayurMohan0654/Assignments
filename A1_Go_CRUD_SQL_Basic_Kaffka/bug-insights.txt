@@ -1,7 +1,8 @@
 needed:
-stop creating such orders which have no facilities existenct
 
 
 done/ solved:
+Apis with Fetch with id gives proper response for no data
 duplicate order create handeling
+stop creating such orders which have no facilities existenct
 duplicate facility code creation stopage
