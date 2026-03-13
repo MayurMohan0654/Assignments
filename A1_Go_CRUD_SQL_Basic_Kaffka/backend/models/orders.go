@@ -7,5 +7,5 @@ type Orders struct {
 	FacilityCode string     `json:"facility_code" binding:"required"`
 	Status       string     `json:"status" binding:"required"`
 	CreatedAt    time.Time  `json:"created_at" gorm:"autoCreateTime"`
-	Facility     Facilities `gorm:"foreignKey:FacilityCode;references:Code" binding:"required"`
+	Facility     Facilities `gorm:"foreignKey:FacilityCode;references:Code" binding:"omitempty"`
 }

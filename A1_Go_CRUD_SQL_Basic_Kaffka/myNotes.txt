@@ -151,3 +151,36 @@ Pointer allows modification:
 
 GORM query: configs.DB.Where("code = ?", code).First(&facilities)
 SQL query: SELECT * FROM facilities WHERE code = 'VND-0001' LIMIT 1;
+
+
+
+this is layered architecture:
+myapp
+│
+├── cmd
+│   └── server
+│       └── main.go
+│
+├── internal
+│   ├── controllers
+│   │   └── facility_controller.go
+│   │
+│   ├── services
+│   │   └── facility_service.go
+│   │
+│   ├── repositories
+│   │   └── facility_repository.go
+│   │
+│   ├── models
+│   │   └── facility.go
+│   │
+│   ├── routes
+│   │   └── routes.go
+│   │
+│   └── config
+│       └── database.go
+│
+├── pkg
+│
+├── go.mod
+└── .env
