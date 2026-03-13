@@ -5,18 +5,10 @@ import (
 
 	"server/configs"
 	"server/models"
+	"server/services"
 
 	"github.com/gin-gonic/gin"
 )
-
-func existsOrder(code string) bool {
-	var count int
-	response := configs.DB.Raw("SELECT count(*) from orders where id = ?", code).Scan(&count)
-	if response.Error != nil {
-		return false
-	}
-	return count > 0
-}
 
 func CreateOrders(c *gin.Context) {
 	var orders models.Orders
@@ -26,19 +18,23 @@ func CreateOrders(c *gin.Context) {
 		return
 	}
 
-	if existsOrder(orders.ID) {
+	o_exist := services.ExistsOrder(orders.ID)
+	if o_exist {
 		c.JSON(http.StatusConflict, gin.H{"err": "409 Conflict", "msg": orders.ID + " already exists"})
 		return
 	}
 
-	if !existsFacility(orders.FacilityCode) {
+	f_exists := services.ExistsFacility(orders.FacilityCode)
+	if !f_exists {
 		c.JSON(http.StatusNotFound, gin.H{"err": "404 Not Found", "msg": "No such facility with Facility_code:- " + orders.FacilityCode})
 		return
 	}
 
-	configs.DB.Create(&orders)
-
-	configs.DB.Raw("select * from facilities where code = ?", orders.FacilityCode).Scan(&orders.Facility)
+	c_err := services.CreateOrder(&orders)
+	if c_err != nil {
+		c.JSON(http.StatusNotImplemented, gin.H{"msg": "error creating the order"})
+		return
+	}
 
 	c.JSON(http.StatusCreated, orders)
 
@@ -59,10 +55,10 @@ func GetOrderById(c *gin.Context) {
 	var orders []models.Orders
 
 	id := c.Param("order_id")
-	result := configs.DB.Raw("Select * from orders where id = ?", id).Scan(&orders)
-	
-	if result.RowsAffected == 0{
-		c.JSON(http.StatusNotFound, gin.H{"err": "404 Not found", "msg" : "No order with id " + id + " was found."})
+	result := configs.DB.Where("ID = ?", id).First(&orders)
+
+	if result.RowsAffected == 0 {
+		c.JSON(http.StatusNotFound, gin.H{"err": "404 Not found", "msg": "No order with id " + id + " was found."})
 		return
 	}
 

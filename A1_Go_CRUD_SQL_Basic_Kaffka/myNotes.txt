@@ -147,3 +147,7 @@ Gin must write values into your variable.
 Without pointer:
 Gin would receive a copy, not the real variable.
 Pointer allows modification:
+
+
+GORM query: configs.DB.Where("code = ?", code).First(&facilities)
+SQL query: SELECT * FROM facilities WHERE code = 'VND-0001' LIMIT 1;

@@ -5,18 +5,10 @@ import (
 
 	"server/configs"
 	"server/models"
+	"server/services"
 
 	"github.com/gin-gonic/gin"
 )
-
-func existsFacility(code string) bool {
-	var count int
-	response := configs.DB.Raw("SELECT count(*) from facilities where code = ?", code).Scan(&count)
-	if response.Error != nil {
-		return false
-	}
-	return count > 0
-}
 
 func CreateFacilities(c *gin.Context) {
 	var facilities models.Facilities
@@ -27,21 +19,25 @@ func CreateFacilities(c *gin.Context) {
 		return
 	}
 
-	if existsFacility(facilities.Code) {
+	exist := services.ExistsFacility(facilities.Code)
+
+	if exist {
 		c.JSON(http.StatusConflict, gin.H{"err": "409 conflict", "msg": facilities.Code + " already exists"})
 		return
 	}
 
-	configs.DB.Create(&facilities)
+	c_err := services.CreateFacility(&facilities)
+	if c_err != nil{
+		c.JSON(http.StatusNotImplemented, gin.H{"msg":"Error creating the facility"})
+		return
+	}
 
-	c.JSON(http.StatusOK, facilities)
+	c.JSON(http.StatusCreated, facilities)
 }
 
 func GetFacilities(c *gin.Context) {
 	var facilities []models.Facilities
-	// configs.DB.Find(&facilities)
-	// or
-	configs.DB.Raw("Select * from facilities").Scan(&facilities)
+	configs.DB.Find(&facilities)
 	c.JSON(http.StatusOK, facilities)
 }
 
