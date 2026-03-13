@@ -35,6 +35,8 @@ func CreateOrders(c *gin.Context) {
 		return
 	}
 
+	services.GetFacilityById(&orders.Facility, orders.FacilityCode); //populates the Facility of created order
+
 	c.JSON(http.StatusCreated, orders)
 
 }
