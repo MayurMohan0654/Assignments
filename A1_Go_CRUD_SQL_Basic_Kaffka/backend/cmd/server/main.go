@@ -1,9 +1,9 @@
 package main
 
 import (
-	"server/configs"
-	"server/models"
-	"server/routes"
+	"server/internal/configs"
+	"server/internal/models"
+	"server/internal/routes"
 
 	"github.com/gin-gonic/gin"
 )

@@ -3,8 +3,8 @@ package controllers
 import (
 	"net/http"
 
-	"server/models"
-	"server/services"
+	"server/internal/models"
+	"server/internal/services"
 
 	"github.com/gin-gonic/gin"
 )

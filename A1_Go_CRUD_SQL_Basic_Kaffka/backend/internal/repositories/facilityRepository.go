@@ -1,8 +1,8 @@
 package repositories
 
 import (
-	"server/configs"
-	"server/models"
+	"server/internal/configs"
+	"server/internal/models"
 )
 
 func ExistsFacility(code string) int64 {

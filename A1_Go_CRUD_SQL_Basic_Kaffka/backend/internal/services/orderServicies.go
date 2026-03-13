@@ -1,8 +1,8 @@
 package services
 
 import (
-	"server/models"
-	"server/repositories"
+	"server/internal/models"
+	"server/internal/repositories"
 )
 
 func CreateOrder(order *models.Orders) error {

@@ -2,7 +2,7 @@ needed:
 
 
 done/ solved:
-Apis with Fetch with id gives proper response for no data
-duplicate order create handeling
-stop creating such orders which have no facilities existenct
-duplicate facility code creation stopage
+Apis with Fetch with id gives proper response for no recoded data
+duplicate orders getting creates handeled
+stop creating such orders which have no facilities existence
+stopped facilities to get created with duplicate code
