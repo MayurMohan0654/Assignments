@@ -3,7 +3,6 @@ package controllers
 import (
 	"net/http"
 
-	"server/configs"
 	"server/models"
 	"server/services"
 
@@ -45,23 +44,22 @@ func CreateOrders(c *gin.Context) {
 
 func GetOrders(c *gin.Context) {
 	var orders []models.Orders
-
-	configs.DB.Preload("Facility").Find(&orders)
-
+	services.GetAllOrderes(&orders)
 	c.JSON(http.StatusOK, orders)
 }
 
 func GetOrderById(c *gin.Context) {
-	var orders []models.Orders
+	var order []models.Orders
 
 	id := c.Param("order_id")
-	result := configs.DB.Where("ID = ?", id).First(&orders)
+	
+	count := services.GetOrderById(&order, id)
 
-	if result.RowsAffected == 0 {
+	if count == 0 {
 		c.JSON(http.StatusNotFound, gin.H{"err": "404 Not found", "msg": "No order with id " + id + " was found."})
 		return
 	}
 
-	c.JSON(http.StatusOK, orders)
+	c.JSON(http.StatusOK, order)
 
 }

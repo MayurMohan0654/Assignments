@@ -3,7 +3,6 @@ package controllers
 import (
 	"net/http"
 
-	"server/configs"
 	"server/models"
 	"server/services"
 
@@ -37,7 +36,7 @@ func CreateFacilities(c *gin.Context) {
 
 func GetFacilities(c *gin.Context) {
 	var facilities []models.Facilities
-	configs.DB.Find(&facilities)
+	services.GetAllFacilities(&facilities);
 	c.JSON(http.StatusOK, facilities)
 }
 
@@ -46,14 +45,12 @@ func GetFacilityById(c *gin.Context) {
 
 	code := c.Param("facility_code")
 
-	result := configs.DB.Raw("SELECT * from facilities WHERE code = ?", code)
-	result.Scan(&facilities)
+	count := services.GetFacilityById(&facilities, code); // find from database and populate the facility variable (thus sending the pointer)
 
-	if result.RowsAffected == 0 {
+	if count == 0 {
 		c.JSON(http.StatusNotFound, gin.H{"err": "404 Not Found", "msg": "No facility with code " + code + " found."})
 		return
 	}
 
-	c.JSON(http.StatusOK, facilities)
-
+	c.JSON(http.StatusFound, facilities)
 }
