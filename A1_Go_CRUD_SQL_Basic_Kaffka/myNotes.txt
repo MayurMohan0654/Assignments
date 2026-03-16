@@ -184,3 +184,38 @@ myapp
 │
 ├── go.mod
 └── .env
+
+what is gin.HandlerFunc?
+It's just a type alias for a function signature. Nothing magic.
+What it actually is
+
+// this is literally what gin defines internally
+type HandlerFunc func(*gin.Context)
+
+That's it. It's just a name for the type func(*gin.Context).
+Why it exists
+
+Without the type alias you'd have to write:
+
+// without alias — verbose
+func AuthMiddleware() func(*gin.Context) {
+    return func(c *gin.Context) { ... }
+}
+
+r.Use(func(c *gin.Context) { ... })
+
+With the alias it's cleaner:
+go
+
+// with alias — clean
+func AuthMiddleware() gin.HandlerFunc {
+    return func(c *gin.Context) { ... }
+}
+
+Same thing, just more readable.
+
+
+supply chain
+micro services {fnp-identy, fnp-so(), fnp-ops(inventory, ) fnp-fullfipment(deliver boy), fnp-stats(), fnp-ops, fnp-locations, }
+raw matireal - componets() ++++ product
+fnp statt service ()

@@ -26,6 +26,7 @@ func InitializeOrderConsumer() {
 			log.Printf("error in consumer %w", err)
 			continue
 		}
+
 		var order models.Orders
 		err = json.Unmarshal(msg.Value, &order)
 

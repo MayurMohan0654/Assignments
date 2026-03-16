@@ -6,10 +6,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func FacilityRoutes(r *gin.Engine) {
+func FacilityRoutes(r *gin.Engine, cont controllers.FacilityController) {
 
-	r.POST("/facility", controllers.CreateFacilities)
-	r.GET("/facility", controllers.GetFacilities)
-	r.GET("/facility/:facility_code", controllers.GetFacilityById)
+	r.POST("/facility",  cont.CreateFacilities)
+	r.GET("/facility", cont.GetFacilities)
+	r.GET("/facility/:facility_code", cont.GetFacilityById)
 
 }

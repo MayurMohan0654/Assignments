@@ -1,20 +1,23 @@
 package configs
 
 import (
+	"fmt"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 var DB *gorm.DB
 
-func ConnectDatabase() {
+func ConnectDatabase(cfg *EnvConfig) {
 
-	db, err := gorm.Open(mysql.Open("root:xgok@tcp(127.0.0.1:3306)/a1?charset=utf8mb4&parseTime=True&loc=Local"))
+	dns := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=True", cfg.DBUser, cfg.DBPass, cfg.DBHost, cfg.DBPort, cfg.DBName)
+	db, err := gorm.Open(mysql.Open(dns))
 
 	if err != nil {
 		panic("Failed to connect database")
-	}else{
-		println("connected to db");
+	} else {
+		println("connected to db")
 	}
 
 	DB = db

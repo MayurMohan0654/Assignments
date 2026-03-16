@@ -24,7 +24,6 @@ func CloseOrder() {
 	writer.Close()
 }
 
-
 func SendOrderToKAfka(order *models.Orders) error {
 	orderBytes, err := json.Marshal(order)
 

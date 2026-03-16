@@ -2,41 +2,57 @@ package services
 
 import (
 	"log"
+	"server/internal/kafka/producers"
 	"server/internal/models"
 	"server/internal/repositories"
-	"server/internal/kafkaProducers"
 )
 
-func CreateOrder(order *models.Orders) error {
-	err := repositories.CreateOrder(order)
+type OrderService interface {
+	ExistsOrder(code string) bool
+	CreateOrder(order *models.Orders) error
+	GetAllOrderes(order *[]models.Orders)
+	GetOrderById(order *models.Orders, id string) int64
+}
+type orderService struct {
+	repo repositories.OrderRepository
+}
 
-	if(err != nil){
-		return err;
+func CreateNewOrderService(repo repositories.OrderRepository) OrderService {
+	serviceVar := orderService{}
+	serviceVar.repo = repo
+	return &serviceVar
+
+}
+
+func (r *orderService) CreateOrder(order *models.Orders) error {
+	err := r.repo.CreateOrder(order)
+
+	if err != nil {
+		return err
 	}
 
-	var savedOrder models.Orders;
+	var savedOrder models.Orders
 
-	repositories.GetOrderById(&savedOrder, order.ID);
-	
+	r.repo.GetOrderById(&savedOrder, order.ID)
+
 	kafkaErr := producers.SendOrderToKAfka(&savedOrder)
 
-	if(kafkaErr != nil){
+	if kafkaErr != nil {
 		log.Printf("order saved in db but faild to send to kafka: %v")
 	}
 
-	return nil;
+	return nil
 }
 
-func ExistsOrder(code string) bool {
-	exist := repositories.ExistsOrder(code)
+func (r *orderService) ExistsOrder(code string) bool {
+	exist := r.repo.ExistsOrder(code)
 	return exist
 }
 
-func GetAllOrderes(order *[]models.Orders) {
-	repositories.GetAllOrderes(order)
+func (r *orderService) GetAllOrderes(order *[]models.Orders) {
+	r.repo.GetAllOrderes(order)
 }
 
-
-func GetOrderById(order *models.Orders, id string) int64{
-	return repositories.GetOrderById(order, id);
+func (r *orderService) GetOrderById(order *models.Orders, id string) int64 {
+	return r.repo.GetOrderById(order, id)
 }

@@ -6,10 +6,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func OrderRoutes(r *gin.Engine) {
+func OrderRoutes(r *gin.Engine, cont controllers.OrderController) {
 
-	r.POST("/order", controllers.CreateOrders)
-	r.GET("/order", controllers.GetOrders)
-	r.GET("/order/:order_id", controllers.GetOrderById)
+	r.POST("/order", cont.CreateOrders)
+	r.GET("/order", cont.GetOrders)
+	r.GET("/order/:order_id", cont.GetOrderById)
 
 }
