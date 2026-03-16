@@ -1,13 +1,30 @@
 package services
 
 import (
+	"log"
 	"server/internal/models"
 	"server/internal/repositories"
+	"server/internal/kafkaProducers"
 )
 
 func CreateOrder(order *models.Orders) error {
 	err := repositories.CreateOrder(order)
-	return err
+
+	if(err != nil){
+		return err;
+	}
+
+	var savedOrder models.Orders;
+
+	repositories.GetOrderById(&savedOrder, order.ID);
+	
+	kafkaErr := producers.SendOrderToKAfka(&savedOrder)
+
+	if(kafkaErr != nil){
+		log.Printf("order saved in db but faild to send to kafka: %v")
+	}
+
+	return nil;
 }
 
 func ExistsOrder(code string) bool {
@@ -20,6 +37,6 @@ func GetAllOrderes(order *[]models.Orders) {
 }
 
 
-func GetOrderById(order *[]models.Orders, id string) int64{
+func GetOrderById(order *models.Orders, id string) int64{
 	return repositories.GetOrderById(order, id);
 }

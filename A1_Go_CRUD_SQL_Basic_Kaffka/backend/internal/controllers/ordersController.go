@@ -51,7 +51,7 @@ func GetOrders(c *gin.Context) {
 }
 
 func GetOrderById(c *gin.Context) {
-	var order []models.Orders
+	var order models.Orders
 
 	id := c.Param("order_id")
 	

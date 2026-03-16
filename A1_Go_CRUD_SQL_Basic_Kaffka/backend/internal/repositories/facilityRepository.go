@@ -16,9 +16,8 @@ func CreateFacility(faciliity *models.Facilities) error {
 	return result.Error
 }
 
-func GetAllFacilities(here *[]models.Facilities) error {
-	result := configs.DB.Find(&here)
-	return result.Error
+func GetAllFacilities(here *[]models.Facilities){
+	configs.DB.Find(&here)
 }
 
 func GetFacilityById(facility *models.Facilities, code string) (int64){
